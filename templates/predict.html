@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Performance Prediction - INX Future Inc{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <section class="prediction-header">
+        <div class="container">
+            <h1 class="page-title">
+                <i class="fas fa-brain"></i>
+                Employee Performance Prediction
+            </h1>
+            <p class="page-subtitle">
+                Predict employee performance using advanced machine learning algorithms
+            </p>
+        </div>
+    </section>
+
+    <section class="prediction-content">
+        <div class="container">
+            {% if prediction %}
+            <div class="prediction-result">
+                <div class="result-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Prediction Result</h3>
+                    <p class="result-text">{{ prediction }}</p>
+                    <a href="{{ url_for('recommendations') }}" class="btn btn-secondary">
+                        <i class="fas fa-lightbulb"></i> View Recommendations
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="prediction-form-container">
+                <h2><i class="fas fa-form"></i> Employee Information Form</h2>
+                <p class="form-description">
+                    Please fill in the employee details below to generate a performance prediction. 
+                    All fields marked with an asterisk (*) are required for accurate prediction.
+                </p>
+                
+                <form method="POST" class="prediction-form">
+                    <div class="form-columns">
+                        <div class="form-column">
+                            {% for col in feature_columns[:((feature_columns|length + 2) // 3)] %}
+                            <div class="form-group">
+                                <label for="{{ col }}">{{ get_description(col) }} *</label>
+                                {% if get_field_type(col) == 'select' %}
+                                    <select name="{{ col }}" id="{{ col }}" required title="{{ get_description(col) }}">
+                                        <option value="">{{ get_placeholder(col) }}</option>
+                                        {% for option in get_field_options(col) %}
+                                        <option value="{{ option }}">{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% else %}
+                                    <input type="{{ get_field_type(col) }}" name="{{ col }}" id="{{ col }}" required 
+                                           placeholder="{{ get_placeholder(col) }}"
+                                           title="{{ get_description(col) }}">
+                                {% endif %}
+                                <small class="helper-text">{{ get_scale(col) }}</small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-column">
+                            {% for col in feature_columns[((feature_columns|length + 2) // 3):(2 * ((feature_columns|length + 2) // 3))] %}
+                            <div class="form-group">
+                                <label for="{{ col }}">{{ get_description(col) }} *</label>
+                                {% if get_field_type(col) == 'select' %}
+                                    <select name="{{ col }}" id="{{ col }}" required title="{{ get_description(col) }}">
+                                        <option value="">{{ get_placeholder(col) }}</option>
+                                        {% for option in get_field_options(col) %}
+                                        <option value="{{ option }}">{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% else %}
+                                    <input type="{{ get_field_type(col) }}" name="{{ col }}" id="{{ col }}" required 
+                                           placeholder="{{ get_placeholder(col) }}"
+                                           title="{{ get_description(col) }}">
+                                {% endif %}
+                                <small class="helper-text">{{ get_scale(col) }}</small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-column">
+                            {% for col in feature_columns[(2 * ((feature_columns|length + 2) // 3)):] %}
+                            <div class="form-group">
+                                <label for="{{ col }}">{{ get_description(col) }} *</label>
+                                {% if get_field_type(col) == 'select' %}
+                                    <select name="{{ col }}" id="{{ col }}" required title="{{ get_description(col) }}">
+                                        <option value="">{{ get_placeholder(col) }}</option>
+                                        {% for option in get_field_options(col) %}
+                                        <option value="{{ option }}">{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% else %}
+                                    <input type="{{ get_field_type(col) }}" name="{{ col }}" id="{{ col }}" required 
+                                           placeholder="{{ get_placeholder(col) }}"
+                                           title="{{ get_description(col) }}">
+                                {% endif %}
+                                <small class="helper-text">{{ get_scale(col) }}</small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-chart-line"></i> Predict Performance
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="fas fa-refresh"></i> Reset Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
