@@ -6,3 +6,4 @@ joblib
 Werkzeug
 openpyxl
 streamlit
+plotly
